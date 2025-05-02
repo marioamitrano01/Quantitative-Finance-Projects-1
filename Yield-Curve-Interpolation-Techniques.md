@@ -1,35 +1,49 @@
-# U.S. Treasury Yield Curve Interpolation
+# Yield Curve Spline Fitter
 
-This project demonstrates yield curve interpolation techniques by fetching U.S. Treasury yield data from FRED and comparing three different interpolation methods:
+Project for analyzing the U.S. Treasury yield curve using  interpolation techniques.
 
-- **Natural Cubic Spline Interpolation**  
-  A deterministic mathematical approach that provides a smooth interpolation between yield data points.
+## Overview
 
-- **Gaussian Process Regression (GPR) with a Matérn Kernel**  
-  A probabilistic machine learning method that not only interpolates the data but also provides uncertainty estimates. In this project, the GPR model uses feature scaling and a Matérn kernel (with ν=2.5) for improved modeling of the yield curve.
+This code provides tools for analyzing and visualizing yield curves, which represent the relationship between interest rates and time to maturity. Understanding yield curves is crucial for financial analysis, economic forecasting, and fixed-income portfolio management.
 
-- **Multi-Layer Perceptron (MLP) Regressor**  
-  A deep neural network approach that captures nonlinear relationships. Input and output feature scaling is applied to enhance numerical stability and convergence.
+## The Mathematics Behind Yield Curve Analysis
 
-## Goal
+### Natural Cubic Splines
 
-The main goal of this project is to:
-- **Collect U.S. Treasury yield curve data** for selected maturities (6 Mo, 1 Yr, 2 Yr, 3 Yr, 5 Yr, 7 Yr, 10 Yr, 20 Yr, and 30 Yr) from the Federal Reserve Economic Data (FRED) API.
-- **Apply interpolation techniques** (Cubic Spline, GPR, and MLP) to estimate the yield curve.
-- **Visualize the results** interactively, comparing the performance of the three methods.
+The core of our library uses natural cubic spline interpolation to model yield curves. Cubic splines are piecewise polynomial functions that:
 
-## Techniques and Mathematical Improvements
+- Create a smooth curve passing through all observed data points
+- Maintain continuous first and second derivatives at knot points
+- Have natural boundary conditions (zero second derivative at endpoints)
 
-1. **Natural Cubic Spline Interpolation:**  
-   - Utilizes a classical mathematical formulation to ensure smoothness of the yield curve.
-   - Efficiently computes coefficients for piecewise cubic polynomials.
+For a set of yields at discrete maturities, the spline constructs cubic polynomials between each pair of adjacent points:
 
-2. **Gaussian Process Regression (GPR):**  
-   - Employs a Matérn kernel (ν=2.5) combined with a constant kernel and a white noise kernel.
-   - Applies feature scaling using scikit‑learn's `StandardScaler` for improved hyperparameter optimization.
-   - Provides uncertainty quantification through confidence intervals.
+### Gaussian Process Regression (GPR)
 
-3. **Multi-Layer Perceptron (MLP) Regressor:**  
-   - Uses a neural network with two hidden layers (50 and 25 neurons) to capture complex nonlinear relationships.
-   - Incorporates feature scaling for both inputs and outputs to enhance model performance.
-   - Serves as an alternative machine learning approach to compare against GPR.
+As an alternative approach, I implement Gaussian Process Regression with a Matérn kernel to model yield curves as probabilistic functions. This method:
+
+- Produces smooth interpolations with uncertainty estimates
+- Handles noisy observations more robustly than splines
+- Provides confidence intervals around predictions
+- Automatically determines the optimal smoothing parameters
+
+The Matérn kernel balances smoothness with flexibility, making it well-suited for yield curve modeling.
+
+### Neural Network Approach
+
+For capturing complex, non-linear relationships, I employ a Multi-Layer Perceptron (MLP) that:
+
+- Learns patterns directly from the data
+- Can capture regime-dependent yield curve shapes
+- May generalize better to unusual market conditions
+- Adapts to changing relationships over time
+
+## Why Use Multiple Models?
+
+Different interpolation techniques excel in different market environments:
+
+- **Splines**: Best for smooth, well-behaved yield curves with sufficient data points
+- **GPR**: Ideal when uncertainty quantification is needed or data is noisy
+- **MLP**: Powerful for capturing complex non-linear relationships or regime changes
+
+By comparing multiple approaches, analysts can gain greater confidence in their yield curve interpretations and better understand model risk.
