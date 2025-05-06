@@ -28,7 +28,7 @@ class Config:
     
 
 
-
+#insert your keys
     API_KEY = os.getenv('BINANCE_API_KEY', 'YOUR_BINANCE_API_KEY')
     API_SECRET = os.getenv('BINANCE_API_SECRET', 'YOUR_BINANCE_API_SECRET')
     
@@ -304,7 +304,6 @@ class CryptoPortfolioApplication:
     def __init__(self):
         self.data_loader = DataLoader()
         self.portfolio_optimizer = PortfolioOptimizer(num_portfolios=5000, risk_aversion=1.0)
-        # Note: We now set epochs=200 for a more technical and accurate ML training.
         self.ml_optimizer = MLPortfolioOptimizer(window_size=30, epochs=200, batch_size=32, learning_rate=0.001, risk_aversion=1.0)
         self.combined_df = None
     
